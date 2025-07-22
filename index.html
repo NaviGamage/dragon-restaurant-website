@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Assistant - AI Chatbot for Restaurant</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- AOS Animation CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a href="#logo">
+                <img src="images/logo.jpg" alt="" class="d-inline-block align-text-top rounded-circle">
+            </a>
+
+            <a class="navbar-brand p-4 " href="#navbar"> DRAGON RESTAURANT </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#menu">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <div class="shopping">
+                        <li class="nav-item">
+                            <a class="nav-link" href="cart.html">
+                                <i class="fas fa-shopping-cart"></i> Orders
+                            </a>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-section">
+        <div class="container-fluid p-0">
+            <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="video-bg">
+                        <video autoplay loop muted playsinline class="d-block w-100 h-100">
+                            <source src="video/video 02.mp4" type="video/mp4 ">
+                        </video>
+                    </div>
+                    <div class="carousel-item active">
+                        <div class="carousel-caption d-none d-md-block">
+                            <p class="lead">Experience the best Sri Lankan cuisine in town!</p>
+                            <a href="#menu" class="btn btn-primary btn-lg">Explore Menu</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="menu" class="menu-section text-center py-5">
+        <h1 class="mb-4">Our Menu</h1>
+        <p class="mb-4">Explore our delicious dishes crafted with the finest ingredients.</p>
+        <div class="card-group">
+            <!-- First 4 visible cards -->
+            <div class="card">
+                <img src="images/image 01.jpg" class="card-img-top" alt="Dish 1">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    <div class="d-flex justify-content-end align-items-center mb-3">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="decrement(this)">-</button>
+                        <span class="mx-3 quantity">0</span>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="increment(this)">+</button>
+                    </div>
+                    <a href="" class="btn btn-primary btn-lg">Order Now</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="images/image 02.jpg" class="card-img-top" alt="Dish 2">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This card has supporting text below as a natural lead-in to additional content.
+                    </p>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    <div class="d-flex justify-content-end align-items-center mb-3">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="decrement(this)">-</button>
+                        <span class="mx-3 quantity">0</span>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="increment(this)">+</button>
+                    </div>
+                    <a href="" class="btn btn-primary btn-lg">Order Now</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="images/image 03.jpg" class="card-img-top" alt="Dish 3">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This card has even longer content than the first to show that equal height
+                        action.</p>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    <div class="d-flex justify-content-end align-items-center mb-3">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="decrement(this)">-</button>
+                        <span class="mx-3 quantity">0</span>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="increment(this)">+</button>
+                    </div>
+                    <a href="" class="btn btn-primary btn-lg">Order Now</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="images/image 01.jpg" class="card-img-top" alt="Dish 1">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    <div class="d-flex justify-content-end align-items-center mb-3">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="decrement(this)">-</button>
+                        <span class="mx-3 quantity">0</span>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="increment(this)">+</button>
+                    </div>
+                    <a href="" class="btn btn-primary btn-lg">Order Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden cards (will be shown when "Show More" is clicked) -->
+        <div class="card-group more-cards" style="display: none;">
+            <div class="card">
+                <img src="images/image 01.jpg" class="card-img-top" alt="Dish 1">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    <div class="d-flex justify-content-end align-items-center mb-3">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="decrement(this)">-</button>
+                        <span class="mx-3 quantity">0</span>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="increment(this)">+</button>
+                    </div>
+                    <a href="" class="btn btn-primary btn-lg">Order Now</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="images/image 02.jpg" class="card-img-top" alt="Dish 2">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This card has supporting text below as a natural lead-in to additional content.
+                    </p>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    <div class="d-flex justify-content-end align-items-center mb-3">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="decrement(this)">-</button>
+                        <span class="mx-3 quantity">0</span>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="increment(this)">+</button>
+                    </div>
+                    <a href="" class="btn btn-primary btn-lg">Order Now</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="images/image 03.jpg" class="card-img-top" alt="Dish 3">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This card has even longer content than the first to show that equal height
+                        action.</p>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    <div class="d-flex justify-content-end align-items-center mb-3">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="decrement(this)">-</button>
+                        <span class="mx-3 quantity">0</span>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="increment(this)">+</button>
+                    </div>
+                    <a href="" class="btn btn-primary btn-lg">Order Now</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <img src="images/image 01.jpg" class="card-img-top" alt="Dish 1">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    <div class="d-flex justify-content-end align-items-center mb-3">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="decrement(this)">-</button>
+                        <span class="mx-3 quantity">0</span>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="increment(this)">+</button>
+                    </div>
+                    <a href="" class="btn btn-primary btn-lg">Order Now</a>
+                </div>
+            </div>
+
+            <!-- Add more cards here as needed -->
+        </div>
+
+        <button id="showMoreBtn" class="btn btn-outline-primary mt-4">Show More</button>
+
+    </section>
+
+    <section id="about" class="about-section text-center py-5">
+        <div class="container">
+            <h1>About Us</h1>
+            <p>Welcome to Dragon Restaurant – where tradition meets taste! Nestled in the heart of the city, Dragon
+                Restaurant is your ultimate destination for authentic Asian cuisine served with a modern twist. From
+                mouthwatering stir-fries to sizzling grilled dishes, every meal is crafted with passion, using the
+                freshest ingredients and time-honored recipes. Whether you're here for a cozy dinner, a family
+                gathering, or a quick lunch, we promise a warm atmosphere, excellent service, and unforgettable flavors.
+                At Dragon Restaurant, we don’t just serve food – we serve experiences. Come taste the fire of flavor!
+            </p>
+
+        </div>
+
+        <section id="contact" class="contact-section text-center py-5">
+            <div class="container">
+                <h2 class="text-center mb-4">Contact Us</h2>
+                <img src="images/image 03.jpg" alt="" width="200" height="200"
+                    class="d-inline-block rounded-circle m-5 ">
+                <img src="images/image 03.jpg" alt="" width="200" height="200"
+                    class="d-inline-block rounded-circle m-5">
+                <img src="images/image 03.jpg" alt="" width="200" height="200"
+                    class="d-inline-block rounded-circle m-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <form>
+                            <input type="text" class="form-control mb-3" placeholder="Your Name">
+                            <input type="email" class="form-control mb-3" placeholder="Your Email">
+                            <textarea class="form-control mb-3" rows="5" placeholder="Your Message"></textarea>
+                            <button class="btn btn-primary w-100">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Gourmet Delight</h3>
+                    <p>Fine dining experience with authentic flavors and fresh ingredients.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#menu">Menu</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Gourmet Delight. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <script src="app.js"></script>
+
+</body>
+
+</html>
