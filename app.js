@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
 // Increment and decrement functionality for quantity and total price
 
 function increment(btn) {
@@ -39,14 +40,80 @@ function decrement(btn) {
 
 function updateTotal(btn) {
     const card = btn.closest(".card");
-    const quantity = parseInt(card.querySelector(".quantity").innerText);
-    const priceTag = card.querySelector(".price-tag");
-    const price = parseFloat(priceTag.getAttribute("data-price"));
-    const totalElement = card.querySelector(".total-price");
-    const total = quantity * price;
-    totalElement.innerText = `Total: Rs. ${total.toFixed(2)}`;
+    const quantity = parseInt(card.querySelector(".quantity").textContent);
+    const price = parseFloat(card.querySelector(".price-tag").dataset.price);
+    card.querySelector(".total-price").textContent = `Total: Rs. ${(quantity * price).toFixed(2)}`;
+}
+
+// Function to generate a unique order ID
+function generateOrderId() {    
+    return 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+}   
+
+// Function to handle order submission
+function addToOrder(btn) {
+    const card = btn.closest(".card");
+    const quantity = parseInt(card.querySelector(".quantity").textContent);
+    const price = parseFloat(card.querySelector(".price-tag").dataset.price);
+    const itemName = card.querySelector(".card-title").textContent;
+    // Validate quantity
+    if (isNaN(quantity) || quantity < 0) {
+        alert("Please select a valid quantity.");
+        return;
+    }
+    const totalAmount = (price * quantity).toFixed(2);
+    const orderId = "OD" + Date.now(); // simple unique order ID
+
+    const orderData = {
+        id: orderId,
+        item: itemName,
+        quantity: quantity,
+        unitPrice: price,
+        total: totalAmount
+    };
+
+    console.log(orderData); // Output
+
+    // Save to localStorage (append to array)
+    let existingOrders = JSON.parse(localStorage.getItem('orders')) || [];
+    existingOrders.push(orderData);
+    localStorage.setItem('orders', JSON.stringify(existingOrders));
+
+    // Redirect to order-view.html
+    window.location.href = "order-view.html";
 
 }
+
+window.onload = function () {
+    const orderTableBody = document.getElementById("orderTableBody");
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+    console.log(orders); // Output
+
+    orders.forEach(order => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${order.id}</td>
+            <td>${order.item}</td>
+            <td>${order.quantity}</td>
+            <td>Rs. ${order.unitPrice.toFixed(2)}</td>
+            <td>Rs. ${order.total}</td>
+            <td>
+                <button class="btn btn-sm btn-danger" onclick="deleteOrder('${order.id}')">Delete</button>
+            </td>
+        `;
+        orderTableBody.appendChild(row);
+    });
+};
+
+function deleteOrder(id) {
+    let orders = JSON.parse(localStorage.getItem('orders')) || [];
+    orders = orders.filter(order => order.id !== id);
+    localStorage.setItem('orders', JSON.stringify(orders));
+    location.reload(); // reload to update the table
+}
+
+
 
 
 
