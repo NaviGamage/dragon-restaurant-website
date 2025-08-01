@@ -106,14 +106,13 @@ window.onload = function () {
     });
 };
 
-function deleteOrder(id) {
+// Function to delete an order  
+function deleteOrder(orderId) {
     let orders = JSON.parse(localStorage.getItem('orders')) || [];
-    orders = orders.filter(order => order.id !== id);
+    orders = orders.filter(order => order.id !== orderId);
+    orders = orders.filter(order => order.id !== undefined);
     localStorage.setItem('orders', JSON.stringify(orders));
-    location.reload(); // reload to update the table
+
+    // Reload the page to reflect changes
+    location.reload();
 }
-
-
-
-
-
