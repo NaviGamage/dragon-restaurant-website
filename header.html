@@ -1,0 +1,40 @@
+<!-- header.html -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="images/logo.jpg" alt="" class="rounded-circle" width="40"> DRAGON RESTAURANT
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#menu">Menu</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                <div class="shopping">
+                    <li class="nav-item"><a class="nav-link" href="order-view.html"><i class="fas fa-receipt"></i> Order
+                            View</a></li>
+                </div>
+                <!-- Cart Icon -->
+                <div class="cart-icon" id="cartIcon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+        </div>
+        </ul>
+    </div>
+    </div>
+</nav>
+
+<!-- Cart Popup -->
+<div class="cart-popup" id="cartPopup">
+    <div class="cart-header">
+        <h3>Your Cart</h3>
+        <button class="close-cart" id="closeCart">×</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-total" id="cartTotal">Total: Rs. 0</div>
+    <button class="checkout-btn btn btn-primary w-100">Checkout</button>
+</div>
