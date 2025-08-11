@@ -132,7 +132,7 @@ function loadOrderTable(orderTableBody) {
     const orders = JSON.parse(localStorage.getItem("orders")) || [];
 
     orders.forEach(order => {
-        if (!order.id) return; // skip undefined
+        if (!order.id) return; 
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${order.id}</td>
@@ -201,7 +201,10 @@ function updateCart() {
                 <span>${item.quantity}</span>
                 <button class="quantity-btn" onclick="incrementCartItem('${item.title}')">+</button>
             </div>
-            <div class="item-price">Rs. ${(item.price * item.quantity).toFixed(2)}</div>
+
+            <div class="item-price">Rs. ${(item.price * item.quantity).toFixed(2)}
+            <button class="delete-btn" onclick="deleteCartItem('${item.title}')">Delete</button>
+            </div>
         `;
         cartItemsContainer.appendChild(itemDiv);
     });
@@ -258,3 +261,26 @@ function decrementCartItem(title) {
         updateCart();
     }
 }
+
+// Delete item from cart
+function deleteCartItem(title) {
+    cart = cart.filter(item => item.title !== title);
+    updateCart();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const chatbotIcon = document.getElementById("chatbotIcon");
+    const chatbotPopup = document.getElementById("chatbotPopup");
+    const closeChatbot = document.getElementById("closeChatbot");
+
+    // Toggle chatbot when icon clicked
+    chatbotIcon.addEventListener("click", () => {
+        chatbotPopup.style.display = chatbotPopup.style.display === "flex" ? "none" : "flex";
+    });
+
+    // Close chatbot when close button clicked
+    closeChatbot.addEventListener("click", () => {
+        chatbotPopup.style.display = "none";
+    });
+});
+

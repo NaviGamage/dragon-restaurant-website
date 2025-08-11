@@ -21,7 +21,7 @@ window.menuItems = [
     name: "Fish Tikka",
     price: 1250,
     image: "images/image07.jpg",
-    description: "Succulent pieces of fish marinated in spices and grilled to perfection."
+    description: "Succulent pieces of fish marinated in spices and grilled to perfection. Delicious dish."
   },
   {
     name: "Chicken Kothu",
@@ -45,6 +45,6 @@ window.menuItems = [
     name: "Chicken Noodles",
     price: 650,
     image: "images/image11.jpg",
-    description: "Delicious stir-fried noodles with tender chicken and fresh vegetables."
+    description: "Delicious stir-fried noodles with tender chicken and fresh vegetables.Delicious dish."
   }
 ];
