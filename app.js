@@ -275,12 +275,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Toggle chatbot when icon clicked
     chatbotIcon.addEventListener("click", () => {
-        chatbotPopup.style.display = chatbotPopup.style.display === "flex" ? "none" : "flex";
+        chatbotPopup.style.display = "flex"; // Show popup
+        chatbotIcon.style.display = "none"; // Hide icon
     });
 
     // Close chatbot when close button clicked
     closeChatbot.addEventListener("click", () => {
-        chatbotPopup.style.display = "none";
+        chatbotPopup.style.display = "none"; // Hide popup
+        chatbotIcon.style.display = "block"; // Show icon
     });
 });
 

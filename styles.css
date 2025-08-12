@@ -394,26 +394,20 @@ footer {
 }
 
 /*chat bot style*/
-.chatbot-icon {
+#chatbotIcon {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #4865b9;
-    color: white;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    bottom: 40px;  
+    right: 40px;   
+    width: 120px !important;  
+    height: 120px !important;
     cursor: pointer;
-    z-index: 9999;
+    z-index: 9999; 
 }
 
 /* Chatbot Popup Styles */
 .chatbot-popup {
     position: fixed;
-    bottom: 80px;
+    bottom: 100px;
     right: 40px;
     width: 300px;
     background: white;

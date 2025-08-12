@@ -86,9 +86,9 @@
 
     <!-- Chatbot Section -->
     <Section id="chatbot" class="chatbot-section text-center py-5">
-        <div class="chatbot-icon" id="chatbotIcon">
-            <i class="fas fa-comments"></i>
-        </div>
+        <lottie-player src="Lottie Animation/Welcome Animation.json" background="transparent" speed="1"
+            style="width: 200px; height: 300px; cursor: pointer;" loop autoplay id="chatbotIcon">
+        </lottie-player>
 
         <div id="chatbotPopup" class="chatbot-popup">
             <div class="chatbot-header">
@@ -106,11 +106,15 @@
     </Section>
 
 
+
+
     <!-- Footer will be loaded here -->
     <div id="footer"></div>
 
     <script src="menuData.js"></script>
     <script src="app.js"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
 </body>
 
 </html>
