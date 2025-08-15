@@ -16,6 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Load order-view.html table if applicable
     const orderTableBody = document.getElementById("orderTableBody");
     if (orderTableBody) loadOrderTable(orderTableBody);
+
+    // Initialize chatbot
+    initChatbot();
 });
 
 // Load menu from menuData.js
@@ -268,21 +271,301 @@ function deleteCartItem(title) {
     updateCart();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+// Chatbot functionality
+
+// document.addEventListener("DOMContentLoaded", () => {
+//     const chatbotIcon = document.getElementById("chatbotIcon");
+//     const chatbotPopup = document.getElementById("chatbotPopup");
+//     const closeChatbot = document.getElementById("closeChatbot");
+//     const userInput = document.getElementById("userInput");
+//     const sendMessage = document.getElementById("sendMessage");
+//     const chatbotMessages = document.getElementById("chatbotMessages");
+
+//     // Toggle chatbot when icon clicked
+//     chatbotIcon.addEventListener("click", () => {
+//         chatbotPopup.style.display = "flex"; // Show popup
+//         chatbotIcon.style.display = "none"; // Hide icon
+//     });
+
+//     // Close chatbot when close button clicked
+//     closeChatbot.addEventListener("click", () => {
+//         chatbotPopup.style.display = "none"; // Hide popup
+//         chatbotIcon.style.display = "block"; // Show icon
+//     });
+//     // Send message when button clicked or Enter pressed
+//     sendMessage.addEventListener("click", sendUserMessage);
+//     userInput.addEventListener("keypress", (e) => {
+//         if (e.key === "Enter") {
+//             sendUserMessage();
+//         }
+//     });
+
+// });
+
+// ===== CHATBOT INTENT CLASSIFIER =====
+async function initChatbot() {
+    // Load TensorFlow.js if not already loaded
+    if (!window.tf) {
+        await loadTensorFlow();
+    }
+    
+    // Train or load model
+    let model;
+    try {
+        model = await loadModel();
+        if (!model) {
+            model = await trainModel();
+            await saveModel(model);
+        }
+    } catch (error) {
+        console.error("Error loading/creating model:", error);
+        model = await trainModel();
+    }
+    
+    // Setup chat UI handlers
+    setupChatUI(model);
+}
+
+async function loadTensorFlow() {
+    return new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest";
+        document.head.appendChild(script);
+        script.onload = resolve;
+    });
+}
+
+// Training data for the chatbot
+const trainingData = [
+    { input: "What time do you open?", output: "hours" },
+    { input: "When do you close today?", output: "hours" },
+    { input: "Show me your menu", output: "menu" },
+    { input: "What's on the menu today?", output: "menu" },
+    { input: "Can I make a reservation?", output: "reservation" },
+    { input: "Book a table for 4", output: "reservation" },
+    { input: "Do you have vegan options?", output: "dietary" },
+    { input: "Gluten-free choices?", output: "dietary" },
+    { input: "Are you open on weekends?", output: "hours" },
+    { input: "What are your opening hours?", output: "hours" },
+    { input: "Can I see the menu?", output: "menu" },
+    { input: "What food do you serve?", output: "menu" },
+    { input: "I need to book a table", output: "reservation" },
+    { input: "Make a reservation for 2", output: "reservation" },
+    { input: "Do you have vegetarian dishes?", output: "dietary" },
+    { input: "Any dairy-free options?", output: "dietary" }
+];
+
+// Text processing functions
+const tokenize = (text) => {
+    return text.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/);
+};
+
+let vocabulary, intents;
+
+function createVocabAndIntents() {
+    const vocab = new Set();
+    trainingData.forEach(item => {
+        tokenize(item.input).forEach(token => vocab.add(token));
+    });
+    vocabulary = Array.from(vocab);
+    intents = [...new Set(trainingData.map(item => item.output))];
+}
+
+// Model functions
+function buildModel(vocabSize, numIntents) {
+    const model = tf.sequential();
+    
+    model.add(tf.layers.dense({
+        units: 32,
+        activation: 'relu',
+        inputShape: [vocabSize]
+    }));
+    
+    model.add(tf.layers.dense({
+        units: 16,
+        activation: 'relu'
+    }));
+    
+    model.add(tf.layers.dense({
+        units: numIntents,
+        activation: 'softmax'
+    }));
+    
+    model.compile({
+        optimizer: 'adam',
+        loss: 'categoricalCrossentropy',
+        metrics: ['accuracy']
+    });
+    
+    return model;
+}
+
+async function trainModel() {
+    createVocabAndIntents();
+    
+    const xs = trainingData.map(item => {
+        const tokens = tokenize(item.input);
+        const vector = new Array(vocabulary.length).fill(0);
+        tokens.forEach(token => {
+            const index = vocabulary.indexOf(token);
+            if (index !== -1) vector[index] = 1;
+        });
+        return vector;
+    });
+    
+    const ys = trainingData.map(item => {
+        const label = new Array(intents.length).fill(0);
+        label[intents.indexOf(item.output)] = 1;
+        return label;
+    });
+    
+    const xTrain = tf.tensor2d(xs);
+    const yTrain = tf.tensor2d(ys);
+    
+    const model = buildModel(vocabulary.length, intents.length);
+    
+    await model.fit(xTrain, yTrain, {
+        epochs: 100,
+        batchSize: 4,
+        validationSplit: 0.2,
+        callbacks: {
+            onEpochEnd: (epoch, logs) => {
+                console.log(`Epoch ${epoch}: loss = ${logs.loss.toFixed(4)}`);
+            }
+        }
+    });
+    
+    xTrain.dispose();
+    yTrain.dispose();
+    
+    return model;
+}
+
+async function predictIntent(model, text) {
+    const tokens = tokenize(text);
+    const vector = new Array(vocabulary.length).fill(0);
+    tokens.forEach(token => {
+        const index = vocabulary.indexOf(token);
+        if (index !== -1) vector[index] = 1;
+    });
+    
+    const prediction = model.predict(tf.tensor2d([vector]));
+    const scores = await prediction.data();
+    prediction.dispose();
+    
+    let maxIndex = 0;
+    let maxScore = scores[0];
+    for (let i = 1; i < scores.length; i++) {
+        if (scores[i] > maxScore) {
+            maxIndex = i;
+            maxScore = scores[i];
+        }
+    }
+    
+    return {
+        intent: intents[maxIndex],
+        confidence: maxScore
+    };
+}
+
+// Model storage functions
+async function saveModel(model) {
+    try {
+        await model.save('localstorage://chatbot-model');
+        console.log('Model saved to local storage');
+    } catch (error) {
+        console.error('Error saving model:', error);
+    }
+}
+
+async function loadModel() {
+    try {
+        const models = await tf.io.listModels();
+        if (models['localstorage://chatbot-model']) {
+            createVocabAndIntents();
+            const model = await tf.loadLayersModel('localstorage://chatbot-model');
+            console.log('Model loaded from local storage');
+            return model;
+        }
+        return null;
+    } catch (error) {
+        console.error('Error loading model:', error);
+        return null;
+    }
+}
+
+// Chat UI functions
+function setupChatUI(model) {
     const chatbotIcon = document.getElementById("chatbotIcon");
     const chatbotPopup = document.getElementById("chatbotPopup");
     const closeChatbot = document.getElementById("closeChatbot");
+    const userInput = document.getElementById("userInput");
+    const sendMessage = document.getElementById("sendMessage");
+    const chatbotMessages = document.getElementById("chatbotMessages");
 
-    // Toggle chatbot when icon clicked
+    // Toggle chatbot visibility
     chatbotIcon.addEventListener("click", () => {
-        chatbotPopup.style.display = "flex"; // Show popup
-        chatbotIcon.style.display = "none"; // Hide icon
+        chatbotPopup.style.display = "flex";
+        chatbotIcon.style.display = "none";
+    });
+    closeChatbot.addEventListener("click", () => {
+        chatbotPopup.style.display = "none";
+        chatbotIcon.style.display = "block";
     });
 
-    // Close chatbot when close button clicked
-    closeChatbot.addEventListener("click", () => {
-        chatbotPopup.style.display = "none"; // Hide popup
-        chatbotIcon.style.display = "block"; // Show icon
+    // Send message handler
+    const sendUserMessage = async () => {
+        const message = userInput.value.trim();
+        if (!message) return;
+        
+        // Add user message to chat
+        addMessage(message, 'user');
+        userInput.value = '';
+        
+        // Get bot response
+        const response = await getBotResponse(model, message);
+        addMessage(response, 'bot');
+    };
+
+    sendMessage.addEventListener("click", sendUserMessage);
+    userInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendUserMessage();
     });
-});
+}
+
+function addMessage(text, sender) {
+    const messagesContainer = document.getElementById("chatbotMessages");
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add(`${sender}-message`);
+    messageDiv.textContent = text;
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+async function getBotResponse(model, message) {
+    try {
+        const { intent, confidence } = await predictIntent(model, message);
+        
+        if (confidence < 0.7) {
+            return "I'm not sure I understand. Can you rephrase your question?";
+        }
+        
+        switch(intent) {
+            case 'hours':
+                return "We're open Monday to Friday from 11am to 10pm, and weekends from 10am to 11pm.";
+            case 'menu':
+                return "You can view our full menu on the menu section of our website. We offer a variety of dishes including seafood, pasta, and vegetarian options.";
+            case 'reservation':
+                return "To make a reservation, please call us at (123) 456-7890 or visit our reservation page.";
+            case 'dietary':
+                return "We offer several vegetarian, vegan, and gluten-free options. Please inform your server about any dietary restrictions.";
+            default:
+                return "Thanks for your message! How can I assist you further?";
+        }
+    } catch (error) {
+        console.error("Error generating response:", error);
+        return "I'm having trouble understanding. Please try again later.";
+    }
+}
+
 
