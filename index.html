@@ -1,120 +1,184 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-bs-theme="light">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smart Assistant - AI Chatbot for Restaurant</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dragon Restaurant | Sri Lankan &amp; Asian wok kitchen</title>
+  <meta name="description" content="Order kottu, rice and curry, devilled dishes and more online from Dragon Restaurant. Dine-in, takeaway and delivery.">
+  <script>document.documentElement.setAttribute("data-bs-theme", localStorage.getItem("dr_theme") || "light");</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Marcellus&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-
 <body>
+  <div id="header"></div>
 
-    <!-- Header will be loaded here -->
-    <div id="header"></div>
+  <main id="main">
+    <!-- Hero -->
+    <section id="home" class="hero">
+      <video autoplay loop muted playsinline aria-hidden="true"><source src="video/hero.mp4" type="video/mp4" onerror="this.parentElement.remove()"></video>
+      <div class="container hero-inner">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-7">
+            <div class="status-pill" id="statusPill"><i></i><span>Checking hours</span></div>
+            <h1>Wok-fired, spiced and served hot.</h1>
+            <p class="lead">Sri Lankan kottu, rice and curry, and Chinese-style wok dishes, cooked to order. Eat in, collect, or have it delivered.</p>
+            <div class="d-flex flex-wrap gap-2">
+              <a href="#menu" class="btn btn-gold btn-lg">Order from the menu</a>
+              <a href="#reserve" class="btn btn-ghost btn-lg">Book a table</a>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="board">
+              <h2>Guest favourites</h2>
+              <p>Tap to add to your cart.</p>
+              <div id="heroPicks"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <section id="home" class="hero-section">
-        <div class="container-fluid p-0">
-            <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="video-bg">
-                        <video autoplay loop muted playsinline class="d-block w-100 h-100">
-                            <source src="video/video 02.mp4" type="video/mp4 ">
-                        </video>
-                    </div>
-                    <div class="carousel-item active">
-                        <div class="carousel-caption d-none d-md-block">
-                            <p class="lead">Experience the best Sri Lankan cuisine in town!</p>
-                            <a href="#menu" class="btn btn-primary btn-lg">Explore Menu</a>
-                        </div>
-                    </div>
+    <!-- Ways to order -->
+    <section class="section">
+      <div class="container">
+        <div class="row g-3">
+          <div class="col-md-4"><div class="option-card"><i class="fa-solid fa-utensils"></i><h3>Dine-in</h3><p>Order from your table or before you arrive. A <span id="scPct"></span>% service charge applies.</p></div></div>
+          <div class="col-md-4"><div class="option-card"><i class="fa-solid fa-bag-shopping"></i><h3>Takeaway</h3><p>Order ahead and collect from the counter. No service charge.</p></div></div>
+          <div class="col-md-4"><div class="option-card"><i class="fa-solid fa-motorcycle"></i><h3>Delivery</h3><p id="delivText"></p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu -->
+    <section id="menu" class="section alt">
+      <div class="container">
+        <div class="section-head">
+          <h2>Our menu</h2>
+          <p>Everything is cooked when you order it. Search, filter by category, or show vegetarian dishes only.</p>
+        </div>
+
+        <div class="menu-tools">
+          <div class="search">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input type="search" id="menuSearch" placeholder="Search dishes, e.g. kottu" aria-label="Search dishes">
+          </div>
+          <label class="switch"><input type="checkbox" id="vegOnly"> Vegetarian only</label>
+          <label class="visually-hidden" for="menuSort">Sort dishes</label>
+          <select id="menuSort" class="form-select">
+            <option value="popular">Sort: Popular first</option>
+            <option value="low">Price: low to high</option>
+            <option value="high">Price: high to low</option>
+            <option value="name">Name: A to Z</option>
+          </select>
+        </div>
+
+        <div class="chips" id="menuChips" role="group" aria-label="Menu categories"></div>
+        <div class="dish-grid" id="dishGrid" aria-live="polite"></div>
+        <div class="text-center mt-4"><button id="showMoreBtn" class="btn btn-outline-jade" type="button"></button></div>
+      </div>
+    </section>
+
+    <!-- Reservation -->
+    <section id="reserve" class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Reserve a table</h2>
+          <p>Tell us when you are coming. We will confirm by phone or WhatsApp.</p>
+        </div>
+        <div class="row g-4">
+          <div class="col-lg-7">
+            <div class="panel">
+              <form id="resForm" novalidate>
+                <div class="row g-3">
+                  <div class="col-md-6"><label class="form-label" for="rName">Your name</label><input class="form-control" id="rName" autocomplete="name"></div>
+                  <div class="col-md-6"><label class="form-label" for="rPhone">Phone number</label><input class="form-control" id="rPhone" type="tel" autocomplete="tel" placeholder="077 123 4567"></div>
+                  <div class="col-md-4"><label class="form-label" for="rDate">Date</label><input class="form-control" id="rDate" type="date"></div>
+                  <div class="col-md-4"><label class="form-label" for="rTime">Time</label><select class="form-select" id="rTime"></select></div>
+                  <div class="col-md-4"><label class="form-label" for="rGuests">Guests</label><select class="form-select" id="rGuests"></select></div>
+                  <div class="col-12"><label class="form-label" for="rNote">Anything we should know? (optional)</label><input class="form-control" id="rNote" placeholder="Birthday, high chair, allergies"></div>
+                  <div class="col-12"><button class="btn btn-lacquer" type="submit">Request booking</button></div>
                 </div>
+              </form>
+              <div id="resDone" class="notice mt-3" hidden></div>
             </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="panel h-100">
+              <h3 class="h5">Opening hours</h3>
+              <ul class="hours-list">
+                <li><span>Monday to Sunday</span><strong id="hoursText"></strong></li>
+              </ul>
+              <p class="mb-2"><i class="fa-solid fa-location-dot text-muted"></i> <span id="addrText"></span></p>
+              <p class="mb-2"><i class="fa-solid fa-phone text-muted"></i> <a id="phoneLink" href="#"></a></p>
+              <p class="mb-0 text-muted small">Groups of more than 12? Please call us so we can arrange the seating.</p>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
-    <!-- Menu Section -->
-    <section id="menu" class="menu-section text-center py-5">
-        <h1 class="mb-4">Our Menu</h1>
-        <p class="mb-4">Explore our delicious dishes crafted with the finest ingredients.</p>
-
-        <!-- First 4 cards -->
-        <div id="menuCards" class="card-group flex-wrap d-flex justify-content-center"></div>
-
-        <!-- Hidden cards that appear when "Show More" is clicked -->
-        <div id="moreCards" class="card-group flex-wrap justify-content-center" style="display: none;"></div>
-
-        <button id="showMoreBtn" class="btn btn-outline-primary mt-4">Show More</button>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about-section text-center py-5">
-        <div class="container">
-            <h1>About Us</h1>
-            <p>Welcome to Dragon Restaurant – where tradition meets taste! Nestled in the heart of the city, Dragon
-                Restaurant is your ultimate destination for authentic Asian cuisine served with a modern twist. From
-                mouthwatering stir-fries to sizzling grilled dishes, every meal is crafted with passion, using the
-                freshest ingredients and time-honored recipes. Whether you're here for a cozy dinner, a family
-                gathering, or a quick lunch, we promise a warm atmosphere, excellent service, and unforgettable flavors.
-                At Dragon Restaurant, we don’t just serve food – we serve experiences. Come taste the fire of flavor!
-            </p>
-
+    <!-- About -->
+    <section id="about" class="section alt">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="section-head"><h2>About us</h2></div>
+            <p class="fs-5">Welcome to Dragon Restaurant, where tradition meets taste. We serve authentic Asian and Sri Lankan food with a modern twist, from stir-fries to sizzling grilled dishes.</p>
+            <p>Every meal is made with fresh ingredients and time-honoured recipes. Come for a quiet dinner, a family gathering or a quick lunch. We do not just serve food, we serve experiences. Come taste the fire of flavour.</p>
+          </div>
         </div>
+      </div>
     </section>
 
-    <section id="contact" class="contact-section text-center py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">Contact Us</h2>
-            
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <form>
-                        <input type="text" class="form-control mb-3" placeholder="Your Name">
-                        <input type="email" class="form-control mb-3" placeholder="Your Email">
-                        <textarea class="form-control mb-3" rows="5" placeholder="Your Message"></textarea>
-                        <button class="btn btn-primary w-100">Send Message</button>
-                    </form>
+    <!-- Reviews -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><h2>What guests say</h2></div>
+        <div class="row g-3" id="reviews"></div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section alt">
+      <div class="container">
+        <div class="section-head"><h2>Contact us</h2><p>Questions, feedback or catering enquiries. We usually reply within a day.</p></div>
+        <div class="row g-4">
+          <div class="col-lg-7">
+            <div class="panel">
+              <form id="contactForm" novalidate>
+                <div class="row g-3">
+                  <div class="col-md-6"><label class="form-label" for="cName">Your name</label><input class="form-control" id="cName" autocomplete="name"></div>
+                  <div class="col-md-6"><label class="form-label" for="cEmail">Email</label><input class="form-control" id="cEmail" type="email" autocomplete="email"></div>
+                  <div class="col-12"><label class="form-label" for="cMsg">Message</label><textarea class="form-control" id="cMsg" rows="5"></textarea></div>
+                  <div class="col-12"><button class="btn btn-lacquer" type="submit">Send message</button></div>
                 </div>
+              </form>
+              <div id="contactDone" class="notice mt-3" hidden></div>
             </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="panel h-100">
+              <h3 class="h5">Prefer to chat?</h3>
+              <p>Message us on WhatsApp for quick questions or to check on an order.</p>
+              <a id="waLink" class="btn btn-lacquer" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp</a>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
+  </main>
 
-    <!-- Chatbot Section -->
-    <Section id="chatbot" class="chatbot-section text-center py-5">
-        <lottie-player src="Lottie Animation/Welcome Animation.json" background="transparent" speed="1"
-            style="width: 200px; height: 300px; cursor: pointer;" loop autoplay id="chatbotIcon">
-        </lottie-player>
+  <div id="footer"></div>
 
-        <div id="chatbotPopup" class="chatbot-popup">
-            <div class="chatbot-header">
-                <h5>Restaurant Assistant</h5>
-                <button id="closeChatbot" class="close-btn">&times;</button>
-            </div>
-            <div id="chatbotMessages" class="chatbot-messages">
-                <div class="bot-message">Hello! Welcome to our restaurant. How can I help you today?</div>
-            </div>
-            <div class="chatbot-input">
-                <input type="text" id="userInput" placeholder="Type your message...">
-                <button id="sendMessage">Send</button>
-            </div>
-        </div>
-    </Section>
-
-
-
-
-    <!-- Footer will be loaded here -->
-    <div id="footer"></div>
-
-    <script src="menuData.js"></script>
-    <script src="app.js"></script>
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
-
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/menuData.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/chatbot.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/app.js"></script>
 </body>
-
 </html>
